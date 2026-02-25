@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('settlement', function (Blueprint $table) {
             $table->id();
+            $table->decimal('amount', 10, 2);
+            $table->boolean("payed")->default(false);
             $table->timestamps();
         });
     }

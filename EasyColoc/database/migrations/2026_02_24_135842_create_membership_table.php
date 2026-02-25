@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('membership', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('colocation_id')->constrained('colocation')->onDelete('cascade');
+            $table->enum('type',['owner','membre'])->default('member');
+            $table->decimal('solde',5,2);
+            $table->dateTime('left_at');
         });
     }
 
