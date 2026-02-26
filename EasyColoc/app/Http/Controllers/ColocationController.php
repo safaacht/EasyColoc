@@ -33,7 +33,7 @@ class ColocationController extends Controller
             $colocation->members()->attach(Auth::id(), [
                 'type' => 'owner',
                 'solde' => 0,
-                'left_at' => now(), 
+                
             ]);
         });
 
