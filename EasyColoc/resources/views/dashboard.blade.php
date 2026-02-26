@@ -8,7 +8,7 @@
 
     <!-- Bouton Ajouter Colocation -->
     <div class="flex justify-end mb-6">
-        <a href="#"
+        <a href="{{ route('colocations.create')}}"
            class="px-6 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 transition shadow-lg">
            + Ajouter une colocation
         </a>

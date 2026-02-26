@@ -40,13 +40,13 @@
                 @error('address') <span class="text-rose-500 text-sm mt-1">{{ $message }}</span> @enderror
             </div>
 
-            <!-- Description -->
+            <!-- Rules -->
             <div>
-                <label class="text-gray-300 font-medium block mb-2">Description</label>
-                <textarea name="description" rows="4"
-                    placeholder="Tell us a bit about the colocation..."
-                    class="w-full px-4 py-3 bg-gray-950 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-purple-500 focus:outline-none transition">{{ old('description') }}</textarea>
-                @error('description') <span class="text-rose-500 text-sm mt-1">{{ $message }}</span> @enderror
+                <label class="text-gray-300 font-medium block mb-2">Internal Rules</label>
+                <textarea name="rules" rows="4"
+                    placeholder="Define the house rules..."
+                    class="w-full px-4 py-3 bg-gray-950 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-purple-500 focus:outline-none transition">{{ old('rules') }}</textarea>
+                @error('rules') <span class="text-rose-500 text-sm mt-1">{{ $message }}</span> @enderror
             </div>
 
             <div class="pt-4 flex gap-4">
@@ -54,7 +54,7 @@
                     class="flex-1 px-8 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold transition duration-300 shadow-lg shadow-purple-900/20">
                     Create Colocation
                 </button>
-                <a href="{{ route('dashboard') }}"
+                <a href="{{ route('colocations.index') }}"
                    class="px-8 py-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 transition duration-300">
                     Cancel
                 </a>
