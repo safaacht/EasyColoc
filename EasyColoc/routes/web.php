@@ -21,7 +21,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $colocation = auth()->user()->colocations()->wherePivot('status', 'joined')->first();
+    return view('dashboard', compact('colocation'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // ==== Auth ==========
@@ -37,6 +38,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('expenses', ExpenseController::class)->only(['index', 'store', 'destroy']);
     Route::resource('settlements', SettlementController::class)->only(['index']);
     Route::patch('settlements/{settlement}/pay', [SettlementController::class, 'markAsPayed'])->name('settlements.pay');
+
+    Route::get('/invitation/accept/{token}', [UserController::class, 'acceptInvitation'])->name('acceptInvitation');
 });
 
 // ======= Admin =======
