@@ -27,6 +27,18 @@
         </h3>
     </div>
 
+    <div class="bg-[#1A1D27] p-6 rounded-xl border border-[#2A2D3A]">
+        @if(auth()->user()->role === 'admin')
+        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+        <form method="POST" action="{{ route('admin.ban', $user->id) }}">
+            @csrf @method('PATCH')
+            <button>Bannir</button>
+        </form>
+        
+        @endif
+    </div>
+    
+
 </div>
 
 @endsection
