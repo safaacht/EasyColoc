@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreCategoryRequest;
 
 use App\Models\Category;
 
@@ -14,11 +15,14 @@ class CategoryController extends Controller
         return view('categories.index', compact('categories'));
     }
 
-    public function store(Request $request)
+    public function create()
     {
-        $validated = $request->validate([
-            'name' => 'required|string|unique:category,name|max:255',
-        ]);
+        return view('category.create');
+    }
+
+    public function store(StoreCategoryRequest $request)
+    {
+        $validated = $request->validated();
 
         Category::create($validated);
 

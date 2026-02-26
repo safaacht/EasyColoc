@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreExpenseRequest;
 
 use App\Models\Expense;
 use App\Models\Colocation;
@@ -20,12 +21,9 @@ class ExpenseController extends Controller
         return view('expenses.index', compact('colocation', 'expenses', 'categories'));
     }
 
-    public function store(Request $request, $colocationId)
+    public function store(StoreExpenseRequest $request, $colocationId)
     {
-        $validated = $request->validate([
-            'amount' => 'required|numeric|min:0.01',
-            'category_id' => 'required|exists:category,id',
-        ]);
+        $validated = $request->validated();
 
         $colocation = Colocation::findOrFail($colocationId);
 

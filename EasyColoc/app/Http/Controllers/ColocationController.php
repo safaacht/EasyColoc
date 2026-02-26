@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreColocationRequest;
+use App\Http\Requests\UpdateColocationRequest;
 
 use App\Models\Colocation;
 use Illuminate\Support\Facades\Auth;
@@ -21,13 +23,9 @@ class ColocationController extends Controller
         return view('colocations.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreColocationRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'nullable|string|max:255',
-            'rules' => 'required|string',
-        ]);
+        $validated = $request->validated();
 
         DB::transaction(function () use ($validated) {
             $colocation = Colocation::create($validated);
@@ -35,7 +33,7 @@ class ColocationController extends Controller
             $colocation->members()->attach(Auth::id(), [
                 'type' => 'owner',
                 'solde' => 0,
-                'left_at' => now(), // Or null if migration allows
+                'left_at' => now(), 
             ]);
         });
 
@@ -53,14 +51,9 @@ class ColocationController extends Controller
         return view('colocations.edit', compact('colocation'));
     }
 
-    public function update(Request $request, Colocation $colocation)
+    public function update(UpdateColocationRequest $request, Colocation $colocation)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'nullable|string|max:255',
-            'rules' => 'required|string',
-            'isActive' => 'boolean',
-        ]);
+        $validated = $request->validated();
 
         $colocation->update($validated);
 
