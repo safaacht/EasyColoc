@@ -26,16 +26,23 @@ class CategoryController extends Controller
 
         Category::create($validated);
 
-        return redirect()->route('categories.index')->with('success', 'Category created successfully.');
+        return redirect()->back()->with('success', 'Category created successfully.');
+    }
+
+    public function update(StoreCategoryRequest $request, Category $category)
+    {
+        $category->update($request->validated());
+        return redirect()->back()->with('success', 'Category updated successfully.');
     }
 
     public function destroy(Category $category)
     {
-        if ($category->expenses()->count() > 0) {
-            return back()->with('error', 'Cannot delete category with associated expenses.');
+        // checking if category is used by any other expenses
+        if ($category->expenses()->exists()) {
+            return redirect()->back()->with('error', 'Cannot delete category that has expenses.');
         }
 
         $category->delete();
-        return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
+        return redirect()->back()->with('success', 'Category deleted successfully.');
     }
 }
