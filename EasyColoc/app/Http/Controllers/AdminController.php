@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Membership;
 use App\Models\Colocation;
 use App\Models\Invitation;
 
@@ -16,8 +17,8 @@ class AdminController extends Controller
             'total_colocations' => Colocation::count(),
             'total_invitations' => Invitation::count(),
             'total_banned'      => User::where('is_banned', true)->count(),
-            'owners'            => User::where('type', 'owner')->count(),
-            'membres'           => User::where('type', 'membreGeneral')->count(),
+            'owners'            => Membership::where('type', 'owner')->count(),
+            'membres'           => Membership::where('type', 'membre')->count(),
         ];
 
         $users = User::latest()->paginate(10);
