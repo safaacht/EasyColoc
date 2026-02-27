@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('colocation_id')->constrained('colocation')->onDelete('cascade');
-            $table->enum('type',['owner','membre'])->default('member');
+            $table->enum('type',['owner','membre'])->default('membre');
             $table->decimal('solde',5,2);
             $table->dateTime('left_at');
         });
