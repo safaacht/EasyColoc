@@ -18,14 +18,17 @@
             <div>
                 <h1 class="text-4xl font-extrabold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
                     {{ $colocation->name }}
+                    @if(!$colocation->isActive)
+                        <span class="ml-2 text-sm font-bold px-2 py-1 bg-gray-500/10 text-gray-400 rounded-lg border border-gray-500/20">Inactive</span>
+                    @endif
                 </h1>
                 <p class="text-gray-400 mt-2">Configuration and management for your shared living space.</p>
             </div>
             
             {{-- Quick Actions --}}
             <div class="flex items-center gap-3">
-                @if(auth()->user()->ownsColocation($colocation))
-                    <form action="{{ route('colocations.destroy', $colocation->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to end this colocation? This will delete all data.')">
+                @if(auth()->user()->ownsColocation($colocation) && $colocation->isActive)
+                    <form action="{{ route('colocations.destroy', $colocation->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to end this colocation? It will be deactivated.')">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
@@ -35,16 +38,22 @@
                             End Colocation
                         </button>
                     </form>
+                @elseif(auth()->user()->ownsColocation($colocation) && !$colocation->isActive)
+                    <button disabled class="opacity-50 cursor-not-allowed bg-gray-500/10 text-gray-500 border border-gray-500/20 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+                        Colocation Ended
+                    </button>
                 @else
-                    <form action="{{ route('colocation.quitter') }}" method="POST" onsubmit="return confirm('Are you sure you want to leave?')">
-                        @csrf
-                        <button type="submit" class="bg-orange-500/10 hover:bg-orange-500 text-orange-500 hover:text-white border border-orange-500/20 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                            </svg>
-                            Leave Colocation
-                        </button>
-                    </form>
+                    @if($colocation->isActive)
+                        <form action="{{ route('colocation.quitter') }}" method="POST" onsubmit="return confirm('Are you sure you want to leave?')">
+                            @csrf
+                            <button type="submit" class="bg-orange-500/10 hover:bg-orange-500 text-orange-500 hover:text-white border border-orange-500/20 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                </svg>
+                                Leave Colocation
+                            </button>
+                        </form>
+                    @endif
                 @endif
                 
                 <div class="bg-emerald-600/10 border border-emerald-500/20 p-4 rounded-2xl flex items-center gap-4">
@@ -359,6 +368,7 @@
 
                             <form method="POST" action="{{ route('settlements.pay', $settlement['id'] ?? $loop->index) }}">
                                 @csrf
+                                @method('PATCH')
                                 <button class="w-full bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white border border-emerald-600/30 font-bold py-2 rounded-lg text-sm transition duration-300">
                                     Mark as Paid
                                 </button>

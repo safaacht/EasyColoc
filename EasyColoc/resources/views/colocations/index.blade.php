@@ -12,6 +12,7 @@
             </h2>
             <p class="text-gray-400 mt-2">Manage your shared living spaces and expenses.</p>
         </div>
+        @if(!Auth::user()->ownsAnyColocation())
         <a href="{{ route('colocations.create') }}" 
            class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold transition duration-300 shadow-lg shadow-purple-900/20 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -19,6 +20,7 @@
             </svg>
             New Colocation
         </a>
+        @endif
     </div>
 
     @if(session('success'))
