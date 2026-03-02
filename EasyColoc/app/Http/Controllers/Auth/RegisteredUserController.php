@@ -32,10 +32,13 @@ class RegisteredUserController extends Controller
     {
         $validated = $request->validated();
 
+        $isFirstUser = User::count() == 0;
+
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'role' => $isFirstUser ? 'admin' : 'membregenerale',
         ]);
 
         event(new Registered($user));
