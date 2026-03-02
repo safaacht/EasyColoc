@@ -9,7 +9,8 @@ class Category extends Model
     protected $table = 'category';
 
     protected $fillable = [
-        'name'
+        'name',
+        'colocation_id'
     ];
 
     public function expenses()
