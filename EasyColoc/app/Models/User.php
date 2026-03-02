@@ -22,6 +22,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'reputation',
+        'is_banned',
     ];
 
     public function colocations()
@@ -33,6 +35,31 @@ class User extends Authenticatable
     public function expenses()
     {
         return $this->hasMany(Expense::class);
+    }
+
+    public function getActiveColocationAttribute()
+    {
+        return $this->colocations()->wherePivot('status', 'joined')->first();
+    }
+
+    public function memberships()
+    {
+        return $this->hasMany(Membership::class);
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function ownsColocation(Colocation $colocation)
+    {
+        return $this->role === 'owner' && $this->colocations()->where('colocation_id', $colocation->id)->exists();
+    }
+
+    public function ownsAnyColocation()
+    {
+        return $this->role === 'owner';
     }
 
 
