@@ -15,6 +15,18 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    @if(in_array(Auth::user()->role, ['owner', 'membregenerale', 'admin']))
+                    <x-nav-link :href="route('colocations.index')" :active="request()->routeIs('colocations.*')">
+                        {{ __('Colocations') }}
+                    </x-nav-link>
+                    @endif
+
+                    @if(Auth::user()->role === 'admin')
+                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                        {{ __('Admin Panel') }}
+                    </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -37,6 +49,12 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
+
+                        @if(Auth::user()->role === 'admin')
+                        <x-dropdown-link :href="route('admin.dashboard')">
+                            {{ __('Admin Panel') }}
+                        </x-dropdown-link>
+                        @endif
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
@@ -70,6 +88,18 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            @if(in_array(Auth::user()->role, ['owner', 'membregenerale', 'admin']))
+            <x-responsive-nav-link :href="route('colocations.index')" :active="request()->routeIs('colocations.*')">
+                {{ __('Colocations') }}
+            </x-responsive-nav-link>
+            @endif
+
+            @if(Auth::user()->role === 'admin')
+            <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                {{ __('Admin Panel') }}
+            </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
