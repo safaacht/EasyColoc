@@ -16,6 +16,7 @@ class StoreExpenseRequest extends FormRequest
         return [
             'amount' => 'required|numeric|min:1',
             'category_id' => 'required|exists:category,id',
+            'description' => 'required|string|max:255',
         ];
     }
 }
