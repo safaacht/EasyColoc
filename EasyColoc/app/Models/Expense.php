@@ -10,9 +10,7 @@ class Expense extends Model
 
     protected $fillable = [
         'amount',
-        'address',
-        'isActive',
-        'rules',
+        'description',
         'user_id',
         'colocation_id',
         'category_id',

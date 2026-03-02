@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Membership extends Model
 {
     protected $table = 'membership';
+    public $timestamps = false;
 
     protected $fillable = [
         'user_id',
@@ -14,6 +15,8 @@ class Membership extends Model
         'type',
         'solde',
         'left_at',
+        'status',
+        'token',
     ];
 
     public function user()
