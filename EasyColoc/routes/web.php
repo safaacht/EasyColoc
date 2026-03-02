@@ -10,8 +10,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\InvitationMail;
 use App\Exports\UsersExport;
-use App\Http\Controllers\UserController;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
 
 require __DIR__.'/auth.php';
 
@@ -20,10 +21,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    $colocation = auth()->user()->colocations()->wherePivot('status', 'joined')->first();
-    return view('dashboard', compact('colocation'));
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])->name('dashboard');
 
 // ==== Auth ==========
 Route::middleware('auth')->group(function () {
@@ -33,9 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('colocations', ColocationController::class);
-    Route::resource('categories', CategoryController::class)->only(['index', 'store']);
-    
-    Route::resource('expenses', ExpenseController::class)->only(['index', 'store', 'destroy']);
+    Route::post('colocations/{colocation}/expenses', [ExpenseController::class, 'store'])->name('colocations.expenses.store');
+    Route::delete('expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
     Route::resource('settlements', SettlementController::class)->only(['index']);
     Route::patch('settlements/{settlement}/pay', [SettlementController::class, 'markAsPayed'])->name('settlements.pay');
 
@@ -56,12 +54,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 // ======== Membre ========
 Route::middleware(['auth', 'membre'])->group(function () {
-    Route::post('/colocation/quitter', [ColocationController::class, 'quitter'])
-         ->name('colocation.quitter');
+    Route::post('colocation/quitter', [ColocationController::class, 'quitter'])->name('colocation.quitter');
 });
 
 // ======= Owner ======
 Route::middleware(['auth', 'owner'])->group(function () {
     Route::post('/colocation/invite',  [UserController::class, 'send'])->name('colocation.invite');
-    Route::delete('/colocation/{id}',  [ColocationController::class, 'destroy'])->name('colocation.cancel');
+    Route::delete('colocation/{colocation}', [ColocationController::class, 'destroy'])->name('colocation.cancel');
+    Route::resource('categories', CategoryController::class)->except(['index', 'create', 'show', 'edit']);
 });
