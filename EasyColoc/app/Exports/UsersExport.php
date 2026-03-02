@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\Membership;
+use App\Models\User;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
@@ -13,7 +13,7 @@ class UsersExport implements FromCollection,WithHeadings
     */
     public function collection()
     {
-        return Membership::select('id', 'name', 'email','type','left_at')->get();
+        return User::select('id', 'name','email','role')->get();
     }
 
     public function headings(): array
@@ -22,8 +22,7 @@ class UsersExport implements FromCollection,WithHeadings
             'Id',
             'Name',
             'Email',
-            'Type',
-            'Left At'
+            'Role'
         ];
     }
 }
