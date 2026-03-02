@@ -15,7 +15,7 @@ class SettlementController extends Controller
                                   ->with(['payer', 'receiver'])
                                   ->get();
 
-        return view('settlments.index', compact('colocation', 'settlements'));
+        return view('settlements.index', compact('colocation', 'settlements'));
     }
 
     public function markAsPayed(Settlement $settlement)
