@@ -61,5 +61,6 @@ Route::middleware(['auth', 'membre'])->group(function () {
 Route::middleware(['auth', 'owner'])->group(function () {
     Route::post('/colocation/invite',  [UserController::class, 'send'])->name('colocation.invite');
     Route::delete('colocation/{colocation}', [ColocationController::class, 'destroy'])->name('colocation.cancel');
+    Route::delete('colocations/{colocation}/members/{member}', [ColocationController::class, 'removeMember'])->name('colocation.removeMember');
     Route::resource('categories', CategoryController::class)->except(['index', 'create', 'show', 'edit']);
 });
