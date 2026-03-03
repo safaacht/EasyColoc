@@ -8,6 +8,7 @@ use App\Http\Requests\StoreExpenseRequest;
 use App\Models\Expense;
 use App\Models\Colocation;
 use App\Models\Category;
+use App\Models\Settlement;
 use Illuminate\Support\Facades\Auth;
 
 class ExpenseController extends Controller
@@ -16,7 +17,7 @@ class ExpenseController extends Controller
     {
         $colocation = Colocation::findOrFail($colocationId);
         $expenses = $colocation->expenses()->with(['user', 'category'])->get();
-        $categories = Category::with('name')->get();
+        $categories = Category::where('colocation_id', $colocationId)->get();
         
         return view('expenses.index', compact('colocation', 'expenses', 'categories'));
     }
@@ -30,11 +31,15 @@ class ExpenseController extends Controller
         $colocation->expenses()->create([
             'amount' => $validated['amount'],
             'category_id' => $validated['category_id'],
+            'description' => $validated['description'],
             'user_id' => Auth::id(),
         ]);
 
-        return redirect()->route('colocations.expenses.index', $colocationId)
-                         ->with('success', 'Expense added successfully.');
+        if (class_exists(Settlement::class)) {
+            Settlement::recalculateForColocation($colocationId);
+        }
+
+        return redirect()->back()->with('success', 'Expense added successfully.');
     }
 
     public function destroy(Expense $expense)
@@ -42,7 +47,10 @@ class ExpenseController extends Controller
         $colocationId = $expense->colocation_id;
         $expense->delete();
 
-        return redirect()->route('expenses.index', $colocationId)
-                         ->with('success', 'Expense deleted successfully.');
+        if (class_exists(Settlement::class)) {
+            Settlement::recalculateForColocation($colocationId);
+        }
+
+        return redirect()->back()->with('success', 'Expense deleted successfully.');
     }
 }
