@@ -150,6 +150,9 @@
                                 <th class="text-left pb-4 font-semibold">Name</th>
                                 <th class="text-center pb-4 font-semibold">Role</th>
                                 <th class="text-center pb-4 font-semibold">Reputation</th>
+                                @if(auth()->user()->ownsColocation($colocation))
+                                    <th class="text-center pb-4 font-semibold">Actions</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-white/5">
@@ -178,6 +181,29 @@
                                             {{ $member->reputation }}
                                         </div>
                                     </td>
+                                    @if(auth()->user()->ownsColocation($colocation))
+                                        <td class="py-4 text-center">
+                                            @if($member->pivot->type !== 'owner')
+                                                <form method="POST"
+                                                      action="{{ route('colocation.removeMember', [$colocation->id, $member->id]) }}"
+                                                      onsubmit="return confirm('Remove {{ $member->name }}? Their unpaid debts will be covered by you.')"
+                                                      class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="user_id" value="{{ $member->id }}">
+                                                    <button type="submit"
+                                                            class="px-3 py-1 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/20 rounded-lg text-[10px] font-bold uppercase transition duration-200 flex items-center gap-1 mx-auto">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                        </svg>
+                                                        Remove
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <span class="text-gray-600 text-[10px]">—</span>
+                                            @endif
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>
